@@ -1,20 +1,25 @@
 ﻿using Newtonsoft.Json;
 using SushiConsole.Models;
 using SushiConsole.Repositories;
+using System.Text.RegularExpressions;
 
 ClientRepository clientRepository = new ClientRepository();
 OrderRepository orderRepository = new OrderRepository();
+bool b = true;
 
-while (true)
+while (b)
 {
     Client client = new Client();
-    Console.WriteLine("Добрый день! Как вас зовут?");
+    Console.WriteLine("Добрый день! Вас приветсвует мини-бот по доставке суши. Как вас зовут?");
+    //to make Validation
     client.Name = Console.ReadLine();
 
     Console.WriteLine("Введите свой email");
+    //to make Validation
     client.Email = Console.ReadLine();
 
     Console.WriteLine("Введите адрес доставки");
+    //to make Validation
     client.Address = Console.ReadLine();
 
     clientRepository.CreateClient(client);
@@ -37,29 +42,130 @@ while (true)
         Console.WriteLine();
 
         Order order = new Order(client);
-      
-        Console.WriteLine("Для выбора нужной позиции введите номер Item позиции");
-        var itemTemp = Convert.ToInt32(Console.ReadLine());
+        Item itemOrder = default;
+        int qtyTemp = default;
+        bool b1 = true;
+        while (b1)
+        {
+            Console.WriteLine("Для выбора нужной позиции введите номер Item позиции");
+            var itemTemp = Convert.ToInt32(Console.ReadLine());
 
-        Console.WriteLine("Введите желаемое количество ролл");
-        var qtyTemp = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите желаемое количество ролл");
+            qtyTemp = Convert.ToInt32(Console.ReadLine());
 
-        var itemOrder = itemsCollection.FirstOrDefault(c => c.Id == itemTemp);
-        order.OrderItems.Add(qtyTemp, itemOrder);
-       
-        
-        
-        Console.WriteLine($"{client.Name}, вы заказали {itemOrder.Name} - {qtyTemp} штук.");
-        Console.WriteLine($"Сумма вашего заказа: {itemOrder.Price * qtyTemp} byn");
+            itemOrder = itemsCollection.FirstOrDefault(c => c.Id == itemTemp);
+            order.OrderItems.Add(new Tuple<int, Item>(qtyTemp, itemOrder));
+
+            Console.WriteLine("Желаете выбрать еще роллы? Введите 1 - да, хочу еще выбрать   2 - нет, завершить заказ");
+
+            bool b2 = true;
+            while (b2)
+            {
+                var input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        b2 = false;
+                        break;
+                    case "2":
+                        b1 = false;
+                        b2 = false;
+                        break;
+                    default:
+                        Console.WriteLine("Введите корректное значение 1 - выбрать роллы снова, 2 - завершить заказ");
+                        break;
+                }
+
+            }
+        }
+
+        Console.WriteLine($"{client.Name}, вы заказали "/*{itemOrder.Name} - {qtyTemp} штук."*/);
+        var sum = order.ShowOrderItems();
+        Console.WriteLine($"Сумма вашего заказа: {sum} byn");
 
         order.OrderIsPacked += Order_OrderIsPacked;
         order.OrderIsDelivered += Order_OrderIsDelivered;
         order.OrderIsPaid += Order_OrderIsPaid;
+        
+        bool b3 = true;
+        while (b3)
+        {
+            Console.WriteLine("Выберите оплату : 1 - оплата картой сейчас\n2 - оплата картой или наличными при получении");
+            var input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    bool b4 = true;
+                    while (b4)
+                    {
+                        Console.WriteLine("Введите данные карты в формате xxxx xxxx xxxx xxxx");
+                        order.CardNumber = Console.ReadLine();
+                        string cardNumber = @"\d{4}\s\d{4}\s\d{4}\s\d{4}";
+                        if (Regex.IsMatch(order.CardNumber, cardNumber))
+                        {
 
-        order.ToPackOrder(true, new TimeSpan( 0, 0, 10));
+                            b4 = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Validation failed. Ввелите ваоидный номер карты"); ;
+                        }
+                    }
+                    b4 = true;
+                    while (b4)
+                    {
+                        Console.WriteLine("Введите месяц/год карты в формате xx xx");
+                        order.CardNumber = Console.ReadLine();
+                        string yearMonth = @"\d{2}\s\d{2}";
+                        if (Regex.IsMatch(order.CardNumber, yearMonth))
+                        {
 
-        Console.WriteLine("Выберите оплату : 1 - оплата картой сейчас\n2 - оплата картой при получении\n3 - оплата наличными при получении");
+                            b4 = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Validation failed. Ввелите валидный номер карты"); ;
+                        }
+                    }
+                    b3 = false;
+                    break;
+                case "2":
+                    b3 = false;
+                    break;
+                default:
+                    Console.WriteLine("Введите корректное значение");
+                    break;
+            }
+        }
 
+        Console.WriteLine();
+        Console.WriteLine($"{client.Name}, Ваш заказ:\nНомер: {order.Id}\n{itemOrder.Name} - {qtyTemp} штук.");
+        Console.WriteLine($"Сумма вашего заказа: {itemOrder.Price * qtyTemp} byn");
+        Console.WriteLine($"\nПосле получения уведомления о статусе заказа, осуществится доставка по адресу {client.Address} в течении 30 мин");
+        Console.WriteLine("Хорошего Вам дня!");
+
+        Console.WriteLine();
+        Console.WriteLine("Сделать новый заказ? Введите 1 - да, 2 - нет");
+        
+        bool b5 = true;
+        while (b5)
+        {
+            var input2 = Console.ReadLine();
+            switch (input2)
+            {
+                case "1":
+                    b5 = false;
+                    break;
+                case "2":
+                    b5 = false;
+                    b = false;
+                    break;
+                default:
+                    Console.WriteLine("Введите корректное значение: 1 - продолжить, 2 - выйти");
+                    break;
+            }
+        }
     }
 }
 

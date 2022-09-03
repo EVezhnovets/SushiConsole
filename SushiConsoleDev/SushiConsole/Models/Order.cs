@@ -14,7 +14,8 @@ namespace SushiConsole.Models
 
         public int Id { get; private set; }
         public Client Client { get; set; }
-        public Dictionary<int, Item> OrderItems { get; set; }
+        public List<Tuple<int, Item>> OrderItems { get; set; }
+        public string CardNumber { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsDelivered { get; set; }
         public bool IsPaid { get; set; }
@@ -23,45 +24,52 @@ namespace SushiConsole.Models
         public Order(Client client)
         {
             Id = CounterOrder;
-            OrderItems = new Dictionary<int, Item>();
+            OrderItems = new List<Tuple<int, Item>>();
             Client = client;
             CounterOrder++;
         }
 
-        public void ShowOrderItems()
+        public decimal ShowOrderItems()
         {
+            List<decimal> sumOfPositionList = new List<decimal>();
+            decimal sumOfPosition = default;
+            decimal sumOfAllPositions = default;
             foreach (var item in OrderItems)
             {
-                Console.WriteLine($"{item.Value.Name}");
+                Console.WriteLine($"{item.Item2.Name} - {item.Item1} штук, {sumOfPosition = item.Item2.Price * item.Item1} byn");
+                sumOfPositionList.Add(sumOfPosition);
             }
+            foreach (var item in sumOfPositionList)
+            {
+                sumOfAllPositions += item;
+            }
+            return sumOfAllPositions;
         }
 
-        public bool ToPackOrder(bool prop, TimeSpan time)
+        public bool ToPackOrder(bool prop/*, TimeSpan time*/)
         {
             if (prop)
             {
                 IsCompleted = prop;
             }
-            Console.WriteLine($"Ваш заказ будет скомплектован через {time} секунд");
-            Thread.Sleep(time);
+            Console.WriteLine($"Ваш заказ комплектуется");
             OrderIsPacked?.Invoke(this, new OrderEventsArgs("Заказ укомплектован", IsCompleted));
             return IsCompleted;
         }
         
-        public bool ToDeliver(bool prop, TimeSpan time)
+        public bool ToDeliver(bool prop/*, TimeSpan time*/)
         {
             
             if (prop)
             {
                 IsDelivered = prop;
             }
-            Console.WriteLine($"Ваш заказ будет доставлен в течении{time}");
-            Thread.Sleep(time);
+            Console.WriteLine($"Ваш заказ будет доставлен в течении  секунд");
             OrderIsDelivered?.Invoke(this, new OrderEventsArgs("Заказ доставлен", IsDelivered));
             return IsDelivered; 
         }
 
-        public bool ToPay(bool prop, TimeSpan time)
+        public bool ToPay(bool prop/*, TimeSpan time*/)
         {
 
             if (prop)
