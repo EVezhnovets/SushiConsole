@@ -13,25 +13,27 @@ namespace SushiConsole.Models
        
         private string _name;
         private Guid _id = Guid.NewGuid();
+        private string _email;
+        private string _adress;
 
         public Guid Id
         {
             get
             {
-                Logger.Info(type, type.GetProperty("Id").ToString(), "Call get method", $"{Thread.CurrentThread.ManagedThreadId}");
+                Logger.Info(Logger.info, type, "Id", "Call get method", $"{Logger.ThreadInfo}");
 
                 return _id;
             }
              private set
             {
-                Logger.Info(type, type.GetProperty("Id").ToString(), "Call get method", $"{Thread.CurrentThread.ManagedThreadId}");
+                Logger.Info(Logger.info, type, "Id", "Call get method", $"{Logger.ThreadInfo}");
             }
         }
         public string Name 
         {
             get
             {
-                Logger.Info(type, type.GetProperty("Name").ToString(), "Call get method", $"{Thread.CurrentThread.ManagedThreadId}");
+                Logger.Info(Logger.info, type, "Name", "Call get method", $"{Logger.ThreadInfo}");
                 
                 return _name;
             }
@@ -39,21 +41,51 @@ namespace SushiConsole.Models
             {
                 _name = value;
 
-                Logger.Info(type, type.GetProperty("Name").ToString(), "Call set method", $"{Thread.CurrentThread.ManagedThreadId}");
+                Logger.Info(Logger.info, type, "Name", "Call set method", $"{Logger.ThreadInfo}");
             } 
         }
-        public string Email { get; set; }
-        public string Address { get; set; }
+        public string Email {
+            get 
+            {
+                Logger.Info(Logger.info, type, "Email", "Call get method", $"{Logger.ThreadInfo}");
+
+                return _email; 
+            } 
+            set
+            {
+                _email = value;
+                Logger.Info(Logger.info, type, "Email", "Call set method", $"{Logger.ThreadInfo}");
+            }
+        }
+        public string Address 
+        { 
+            get
+            {
+                Logger.Info(Logger.info, type, "Address", "Call get method", $"{Logger.ThreadInfo}");
+
+                return _adress;
+            } 
+            set
+            {
+                Logger.Info(Logger.info, type, "Address", "Call set method", $"{Logger.ThreadInfo}");
+
+                _adress = value;
+            } 
+        }
 
         public Client()
         {
             Id = _id;
+
+            Logger.Info(Logger.info, type, "Client", "Call set method", $"{Logger.ThreadInfo}");
         }
         public Client(string name, string email)
         {
             Id = _id;
             Name = name;
             Email = email;
+
+            Logger.Info(Logger.info, type, "Client", "Call set method", $"{Logger.ThreadInfo}");
         }
     }
 }

@@ -12,9 +12,9 @@ namespace SushiConsoleDev.Email
     {
         public static async Task<bool> SendEmail(string email, string subject, string body)
         {
-            var fromAddress = new MailAddress("itacademymailsender@gmail.com");
-            var toAddress = new MailAddress(email);
-            const string fromPassword = "securepass";
+            var fromAddress = new MailAddress("eugene.vezhnavets@gmail.com", "Eugene");
+            var toAddress = new MailAddress("eugene.vezhnavets@gmail.com");
+            const string fromPassword = "password";
 
             var smtp = new SmtpClient
             {
@@ -26,11 +26,7 @@ namespace SushiConsoleDev.Email
                 Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
                 Timeout = 20000
             };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body,
-            })
+            using (var message = new MailMessage(fromAddress, toAddress){ Subject = subject, Body = body})
             {
                 await smtp.SendMailAsync(message);
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SushiConsoleDev.Logger;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,17 +10,129 @@ namespace SushiConsole.Models
 {
     public class Order
     {
-        public event Action<object, EventArgs> OrderIsPacked;
-        public event Action<object, EventArgs> OrderIsDelivered;
-        public event Action<object, EventArgs> OrderIsPaid;
+        Type type = typeof(Order);
 
-        public int Id { get; private set; }
-        public Client Client { get; set; }
-        public List<Tuple<int, Item>> OrderItems { get; set; }
-        public string CardNumber { get; set; }
-        public bool IsCompleted { get; set; }
-        public bool IsDelivered { get; set; }
-        public bool IsPaid { get; set; }
+        private int _id;
+        private Client _client;
+        private List<Tuple<int, Item>> _orderItems;
+        private string _cardNumber;
+        private bool _isCompleted;
+        private bool _isDelivered;
+        private bool _isPaid;
+
+        public event Action<object, EventArgs>? OrderIsPacked;
+        public event Action<object, EventArgs>? OrderIsDelivered;
+        public event Action<object, EventArgs>? OrderIsPaid;
+
+        public int Id
+        {
+            get
+            {
+                if (_id != null)
+                {
+                    Logger.Info(Logger.info, type, "Id", "Call get method", $"{Logger.ThreadInfo}");
+                    return (int)_id;
+                }
+                Logger.Error(Logger.error, type, "Id", "Call get method", $"{Logger.ThreadInfo}");
+                throw new ArgumentNullException("Id is null");
+            }
+            private set
+            {
+                _id = value;
+                Logger.Info(Logger.info, type, "Id", "Call set method", $"{Logger.ThreadInfo}");
+            }
+        }
+        public Client Client 
+        { 
+            get
+            {
+                Logger.Info(Logger.info, type, "Client", "Call get method", $"{Logger.ThreadInfo}");
+
+                return _client ;
+            }
+            set
+            {
+                Logger.Info(Logger.info, type, "Client", "Call set method", $"{Logger.ThreadInfo}");
+
+                _client = value;
+            } 
+        }
+        public List<Tuple<int, Item>> OrderItems
+        {
+            get
+            {
+                Logger.Info(Logger.info, type, "List<Tuple<int, Item>>", "Call get method", $"{Logger.ThreadInfo}");
+
+                return _orderItems;
+            }
+            set
+            {
+                _orderItems = value;
+
+                Logger.Info(Logger.info, type, "List<Tuple<int, Item>>.ToString()", "Call set method", $"{Logger.ThreadInfo}");
+
+            }
+        }
+        public string CardNumber
+        {
+            get
+            {
+                Logger.Info(Logger.info, type, "CardNumber", "Call get method", $"{Logger.ThreadInfo}");
+
+                return _cardNumber;
+            }
+            set
+            {
+                _cardNumber = value;
+
+                Logger.Info(Logger.info, type, "CardNumber", "Call set method", $"{Logger.ThreadInfo}");
+            }
+        }
+        public bool IsCompleted
+        {
+            get
+            {
+                Logger.Info(Logger.info, type, "IsCompleted", "Call get method", $"{Logger.ThreadInfo}");
+
+                return (bool)_isCompleted;
+            }
+            set
+            {
+                _isCompleted = value;
+
+                Logger.Info(Logger.info, type, "IsCompleted", "Call set method", $"{Logger.ThreadInfo}");
+            }
+        }
+        public bool IsDelivered
+        {
+            get
+            {
+                Logger.Info(Logger.info, type, "IsDelivered", "Call get method", $"{Logger.ThreadInfo}");
+
+                return (bool)_isDelivered;
+            }
+            set
+            {
+                _isDelivered = value;
+
+                Logger.Info(Logger.info, type, "IsDelivered", "Call set method", $"{Logger.ThreadInfo}");
+            }
+        }
+        public bool IsPaid
+        {
+            get
+            {
+                Logger.Info(Logger.info, type, "IsDelivered", "Call get method", $"{Logger.ThreadInfo}");
+
+                return (bool)_isPaid;
+            }
+            set
+            {
+                _isPaid = value;
+                Logger.Info(Logger.info, type, "IsDelivered", "Call set method", $"{Logger.ThreadInfo}");
+
+            }
+        }
         public static int CounterOrder { get; set; } = 1;
 
         public Order(Client client)
@@ -28,6 +141,9 @@ namespace SushiConsole.Models
             OrderItems = new List<Tuple<int, Item>>();
             Client = client;
             CounterOrder++;
+
+            Logger.Info(Logger.info, type,"Order", "Call constructor", $"{Logger.ThreadInfo}");
+
         }
 
         public decimal ShowOrderItems()
@@ -44,10 +160,13 @@ namespace SushiConsole.Models
             {
                 sumOfAllPositions += item;
             }
+
+            Logger.Info(Logger.info, type, "ShowOrderItems", "Call method", $"{Logger.ThreadInfo}");
+
             return sumOfAllPositions;
         }
 
-        public bool ToPackOrder(bool prop/*, TimeSpan time*/)
+        public bool ToPackOrder(bool prop)
         {
             if (prop)
             {
@@ -55,10 +174,13 @@ namespace SushiConsole.Models
             }
             Console.WriteLine($"Ваш заказ комплектуется");
             OrderIsPacked?.Invoke(this, new OrderEventsArgs("Заказ укомплектован", IsCompleted));
+
+            Logger.Info(Logger.info, type,"ToPackOrder", "Call method", $"{Logger.ThreadInfo}");
+
             return IsCompleted;
         }
         
-        public bool ToDeliver(bool prop/*, TimeSpan time*/)
+        public bool ToDeliver(bool prop)
         {
             
             if (prop)
@@ -67,10 +189,13 @@ namespace SushiConsole.Models
             }
             Console.WriteLine($"Ваш заказ будет доставлен в течении  секунд");
             OrderIsDelivered?.Invoke(this, new OrderEventsArgs("Заказ доставлен", IsDelivered));
+
+            Logger.Info(Logger.info, type,"ToDeliver", "Call method", $"{Logger.ThreadInfo}");
+
             return IsDelivered; 
         }
 
-        public bool ToPay(bool prop/*, TimeSpan time*/)
+        public bool ToPay(bool prop)
         {
 
             if (prop)
@@ -79,12 +204,10 @@ namespace SushiConsole.Models
             }
             Console.WriteLine($"Ваш заказ оплачен");
             OrderIsPaid?.Invoke(this, new OrderEventsArgs("Заказ оплачен", IsPaid));
-            return IsPaid;
-        }
 
-        private string GetMethodName()
-        {
-            return new StackTrace(1).GetFrame(0).GetMethod().Name;
+            Logger.Info(Logger.info, type, "ToPay", "Call method", $"{Logger.ThreadInfo}");
+
+            return IsPaid;
         }
     }
 }

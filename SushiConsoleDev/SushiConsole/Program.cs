@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SushiConsole.Models;
 using SushiConsole.Repositories;
-using SushiConsoleDev.Logger;
+using SushiConsoleDev.Email;
 using System.Text.RegularExpressions;
 
 ClientRepository clientRepository = new ClientRepository();
@@ -10,18 +10,12 @@ bool b = true;
 
 while (b)
 {
-    //Console.WriteLine(_dateNameFile);
-    //Logger.Info();
-    //Logger.Debug();
-    //Logger.Error();
+    EmailSender.SendEmail("eugene.vezhnavets@gmail.com", "Привет из теста smtp", "Тест smtp");
 
     Client client = new Client();
     Console.WriteLine("Добрый день! Вас приветсвует мини-бот по доставке суши. Как вас зовут?");
     //to make Validation
     client.Name = Console.ReadLine();
-    //Logger.Info(client);
-
-    Console.WriteLine(client.Id);
 
     Console.WriteLine("Введите свой email");
     //to make Validation
@@ -205,12 +199,3 @@ void Order_OrderIsPacked(object arg1, EventArgs arg2)
 //    await writer.WriteLineAsync(json);
 //}
 #endregion
-
-//Console.WriteLine(json);
-
-//List<Item> items = JsonConvert.DeserializeObject<List<Item>>(json);
-
-//foreach (var item in items)
-//{
-//    Console.WriteLine($"{item.Name}, price: {item.Price}");
-//}
