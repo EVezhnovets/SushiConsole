@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SushiConsole.Models;
 using SushiConsole.Repositories;
+using SushiConsoleDev.Logger;
 using System.Text.RegularExpressions;
 
 ClientRepository clientRepository = new ClientRepository();
@@ -9,10 +10,18 @@ bool b = true;
 
 while (b)
 {
+    //Console.WriteLine(_dateNameFile);
+    //Logger.Info();
+    //Logger.Debug();
+    //Logger.Error();
+
     Client client = new Client();
     Console.WriteLine("Добрый день! Вас приветсвует мини-бот по доставке суши. Как вас зовут?");
     //to make Validation
     client.Name = Console.ReadLine();
+    //Logger.Info(client);
+
+    Console.WriteLine(client.Id);
 
     Console.WriteLine("Введите свой email");
     //to make Validation

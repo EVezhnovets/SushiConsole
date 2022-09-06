@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,6 +80,11 @@ namespace SushiConsole.Models
             Console.WriteLine($"Ваш заказ оплачен");
             OrderIsPaid?.Invoke(this, new OrderEventsArgs("Заказ оплачен", IsPaid));
             return IsPaid;
+        }
+
+        private string GetMethodName()
+        {
+            return new StackTrace(1).GetFrame(0).GetMethod().Name;
         }
     }
 }
