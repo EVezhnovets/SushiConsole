@@ -8,15 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Logger\LoggerRepository\log20220906_[counter].txt" />
+    <Compile Remove="Logger\LoggerRepository\**" />
+    <EmbeddedResource Remove="Logger\LoggerRepository\**" />
+    <None Remove="Logger\LoggerRepository\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Logger\LoggerRepository\" />
   </ItemGroup>
 
 </Project>

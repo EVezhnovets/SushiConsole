@@ -19,6 +19,7 @@ namespace SushiConsole.Models
         private bool _isCompleted;
         private bool _isDelivered;
         private bool _isPaid;
+        public static int maxNumberOfRollsPerOrder = 50;
 
         public event Action<object, EventArgs>? OrderIsPacked;
         public event Action<object, EventArgs>? OrderIsDelivered;
@@ -135,6 +136,10 @@ namespace SushiConsole.Models
         }
         public static int CounterOrder { get; set; } = 1;
 
+        public Order()
+        {
+
+        }
         public Order(Client client)
         {
             Id = CounterOrder;
@@ -172,7 +177,7 @@ namespace SushiConsole.Models
             {
                 IsCompleted = prop;
             }
-            Console.WriteLine($"Ваш заказ комплектуется");
+            Console.WriteLine($"Ваш заказ будет скомплектован в течение 5 минут");
             OrderIsPacked?.Invoke(this, new OrderEventsArgs("Заказ укомплектован", IsCompleted));
 
             Logger.Info(Logger.info, type,"ToPackOrder", "Call method", $"{Logger.ThreadInfo}");
@@ -187,7 +192,7 @@ namespace SushiConsole.Models
             {
                 IsDelivered = prop;
             }
-            Console.WriteLine($"Ваш заказ будет доставлен в течении  секунд");
+            Console.WriteLine($"Ваш заказ будет доставлен в течении до {DateTime.Now/*.AddHours(2)*/}");
             OrderIsDelivered?.Invoke(this, new OrderEventsArgs("Заказ доставлен", IsDelivered));
 
             Logger.Info(Logger.info, type,"ToDeliver", "Call method", $"{Logger.ThreadInfo}");

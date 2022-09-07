@@ -13,16 +13,14 @@ namespace SushiConsoleDev.Logger
         public static string debug = "DEBUG";
         public static string error = "ERROR";
         public static int fileSize = 30720;
-
         public static string _dateTime = String.Format("{0:yyyyMMdd}_", DateTime.UtcNow);
-        public static int Counter { get; private set; } = 1;
-
         public static string targetName = default;
         public static string path = default;
         public static string pathDirectory = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\";
-        
+
+        public static int Counter { get; private set; } = 1;
+
         public static int ThreadInfo { get; private set; } = Thread.CurrentThread.ManagedThreadId;
-       
 
         public static void Info(string layer, Type type, string method, string message, string threadInfo)
         {
@@ -40,7 +38,7 @@ namespace SushiConsoleDev.Logger
             LoggerHelper(layer, type, method, message, threadInfo);
         }
 
-         public static void CheckFileSize()
+        public static void CheckFileSize()
         {
             string[] filePaths = Directory.GetFiles(pathDirectory);
             List<string> filePathsCollection = new List<string>();
