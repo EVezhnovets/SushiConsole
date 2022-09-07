@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace SushiConsoleDev.Logger
 {
@@ -11,11 +12,17 @@ namespace SushiConsoleDev.Logger
         public static string info = "INFO";
         public static string debug = "DEBUG";
         public static string error = "ERROR";
+        public static int fileSize = 30720;
 
         public static string _dateTime = String.Format("{0:yyyyMMdd}_", DateTime.UtcNow);
-        public static string _counter = "counter";
-        public static string path = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\log{_dateTime}[{_counter}].txt";
-        public static  int ThreadInfo { get; private set; } = Thread.CurrentThread.ManagedThreadId;
+        public static int Counter { get; private set; } = 1;
+
+        public static string targetName = default;
+        public static string path = default;
+        public static string pathDirectory = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\";
+        
+        public static int ThreadInfo { get; private set; } = Thread.CurrentThread.ManagedThreadId;
+       
 
         public static void Info(string layer, Type type, string method, string message, string threadInfo)
         {
@@ -33,12 +40,50 @@ namespace SushiConsoleDev.Logger
             LoggerHelper(layer, type, method, message, threadInfo);
         }
 
-        public void CheckFileSize()
+         public static void CheckFileSize()
         {
+            string[] filePaths = Directory.GetFiles(pathDirectory);
+            List<string> filePathsCollection = new List<string>();
+            List<int> filePathParsedNumbers = new List<int>();
 
+            foreach (var item in filePaths)
+            {
+                int index = item.IndexOf('[');
+                var nameToParse = item.Substring(index + 1);
+                var targetNumberString = new String(nameToParse.Where(Char.IsDigit).ToArray());
+                var targetNumber = int.Parse(targetNumberString);
+
+                filePathParsedNumbers.Add(targetNumber);
+            }
+            filePathParsedNumbers.Sort();
+
+            if (filePathParsedNumbers.Count == 0)
+            {
+                path = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\log{_dateTime}[{Counter}].txt";
+            }
+            else
+            {
+                targetName = $"log{_dateTime}[{filePathParsedNumbers[filePathParsedNumbers.Count - 1]}].txt";
+
+                var newPathToTagretFile = @$"{pathDirectory}" + $"{targetName}";
+                FileInfo file = new System.IO.FileInfo(newPathToTagretFile);
+                long size = file.Length;
+                
+                if (size > fileSize)
+                {
+                    Counter = filePathParsedNumbers[filePathParsedNumbers.Count - 1];
+                    ++Counter;
+                    path = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\log{_dateTime}[{Counter}].txt";
+                }
+                else
+                {
+                    path = newPathToTagretFile;
+                }
+            }
         }
-        public static void LoggerHelper(string layer, Type type, string method, string message, string threadInfo)
+        public static async void LoggerHelper(string layer, Type type, string method, string message, string threadInfo)
         {
+            CheckFileSize();
             using (StreamWriter streamWriter = new StreamWriter(path, true))
             {
                 StringBuilder sb = new StringBuilder();
@@ -50,8 +95,8 @@ namespace SushiConsoleDev.Logger
                 sb.Append($"{message}_");
                 sb.Append($"thread id:{threadInfo}");
                 sb.ToString();
-                streamWriter.WriteLine(sb.ToString());
 
+                await streamWriter.WriteLineAsync(sb.ToString());
             }
         }
     }
