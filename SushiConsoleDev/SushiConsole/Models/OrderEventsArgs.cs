@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SushiConsole.Models
+﻿namespace SushiConsoleDev.Models
 {
     public class OrderEventsArgs : EventArgs
     {

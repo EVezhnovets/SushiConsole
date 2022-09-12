@@ -1,11 +1,7 @@
-﻿using SushiConsole.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SushiConsoleDev.Models;
+using SushiConsoleDev.Logger;
 
-namespace SushiConsole.Repositories
+namespace SushiConsoleDev.Repositories
 {
     internal class OrderRepository : IOrderRepository
     {
@@ -13,26 +9,29 @@ namespace SushiConsole.Repositories
         public void CreateOrder(Order order)
         {
             _orders.Add(order);
+            Logger.Logger.Info(typeof(OrderRepository), nameof(CreateOrder), "Call method");
+
         }
 
         public List<Order> GetAllOrders()
         {
             var allOrders = _orders.ToList();
 
-            foreach (var item in allOrders)
-            {
-                Console.WriteLine($"Order Id :{item.Id}, Client: {item.Client.Name}, address:" +
-                    $"{item.Client.Address}, Is Comleted:{item.IsCompleted}, Is Delivered:" +
-                    $"{item.IsDelivered}, Is Paid:{item.IsPaid}");
-            }
+            Logger.Logger.Info(typeof(OrderRepository), nameof(GetAllOrders), "Call method");
 
             return allOrders;
         }
 
-        public Order GetOrderById(int id)
+        public Order? GetOrderById(int id)
         {
             var orderToGet = _orders.FirstOrDefault(o => o.Id == id);
+            Logger.Logger.Info(typeof(OrderRepository), nameof(GetOrderById), "Call method");
+
             return orderToGet;
+        }
+        public void ClearList()
+        {
+            _orders.Clear();
         }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
-using SushiConsole.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SushiConsoleDev.Models;
+using SushiConsoleDev.Exceptions;
+using SushiConsoleDev.Logger;
 
 namespace SushiConsoleDev.Repositories
 {
@@ -12,24 +9,26 @@ namespace SushiConsoleDev.Repositories
     {
         private string pathItems = @"E:\IT\Repositories\SushiConsole\SushiConsole\SushiConsole\Items.json";
 
-        public async Task<List<Item>> ToMakeItemCollectionFromJson()
+        public async Task<List<Item>> GetItemColloection()
         {
             List<Item> itemsCollection = new List<Item>();
-            using (StreamReader reader = new StreamReader(pathItems))
+            try
             {
+                StreamReader reader = new StreamReader(GetPath());
                 string items = await reader.ReadToEndAsync();
-
                 itemsCollection = JsonConvert.DeserializeObject<List<Item>>(items);
+                Logger.Logger.Info(typeof(ItemRepository), nameof(GetItemColloection), "Call method");
                 return itemsCollection;
             }
-        }
-
-        public void ShowItemsCollection(List<Item> itemsCollection)
-        {
-            foreach (var item in itemsCollection)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Item {item.Id}. {item.Name}, description:{item.Description}, price for 1pc:{item.Price.ToString()}");
+                throw new JsonNullException("File not found");
             }
+        }
+        public string GetPath()
+        {
+            var path = Environment.CurrentDirectory + "\\Items.json";
+            return path;
         }
     }
 }

@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SushiConsoleDev.Logger;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SushiConsoleDev.Email
 {
-    internal class EmailSender
+    public class EmailSender
     {
         public static async Task<bool> SendEmail(string email, string subject, string body)
         {
-            var fromAddress = new MailAddress("eugene.vezhnavets@gmail.com", "Eugene");
-            var toAddress = new MailAddress("eugene.vezhnavets@gmail.com");
-            const string fromPassword = "password";
+            var fromAddress = new MailAddress("eugene.vezhnavets@gmail.com", "SushiStore");
+            var toAddress = new MailAddress(email);
+            const string fromPassword = "ykjcocrjsfznvohj";
 
             var smtp = new SmtpClient
             {
@@ -30,7 +26,7 @@ namespace SushiConsoleDev.Email
             {
                 await smtp.SendMailAsync(message);
             }
-
+            Logger.Logger.Info(typeof(EmailSender), nameof(SendEmail), "Call method");
             return true;
         }
     }

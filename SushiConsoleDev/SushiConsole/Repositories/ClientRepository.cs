@@ -1,12 +1,8 @@
-﻿using SushiConsole.Exceptions;
-using SushiConsole.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SushiConsoleDev.Exceptions;
+using SushiConsoleDev.Models;
+using SushiConsoleDev.Logger;
 
-namespace SushiConsole.Repositories
+namespace SushiConsoleDev.Repositories
 {
     public class ClientRepository : IClientRepository
     {
@@ -15,42 +11,37 @@ namespace SushiConsole.Repositories
         public void CreateClient(Client client)
         {
             _clients.Add(client);
+            Logger.Logger.Info(typeof(ClientRepository), nameof(CreateClient), "Call method");
+
         }
-       
+
         public List<Client> GetAllClients()
         {
             var allClients = _clients.ToList();
 
-            foreach (var client in allClients)
-            {
-                Console.WriteLine($"Id - {client.Id}, Name - {client.Name}, email - {client.Email}, address - {client.Address}");
-            }
+            Logger.Logger.Info(typeof(ClientRepository), nameof(GetAllClients), "Call method");
+
             return allClients;
         }
 
-        public Client GetClientById(Guid clientId)
+        public Client? GetClientById(Guid clientId)
         {
             var clientToGet = _clients.FirstOrDefault(c => c.Id == clientId);
+
+            Logger.Logger.Info(typeof(ClientRepository), nameof(GetClientById), "Call method");
+
             return clientToGet;
         }
 
-        public void ShowAllClients()
-        { 
-            foreach (Client client in _clients)
-            { 
-                //Console.WriteLine($"Id - {client.Id}, Name - {client.Name}, email - {client.Email}, address - {client.Address}");
-            }
-        }
-
-        #region GetClientByName
-        public Client GetClientByName(string name)
+        public Client? GetClientByName(string name)
         {
             var clientToGet = _clients.FirstOrDefault(c => c.Name == name);
+
+            Logger.Logger.Info(typeof(ClientRepository), nameof(GetClientByName), "Call method");
+
             return clientToGet;
         }
-        #endregion
 
-        #region UpdateClient
         public void UpdateClient(Client client)
         {
             var clientToUpdate = _clients.FirstOrDefault(c => c.Id == client.Id);
@@ -60,10 +51,10 @@ namespace SushiConsole.Repositories
                 clientToUpdate.Email = client.Email;
                 clientToUpdate.Address = client.Address;
             }
-        }
-        #endregion
+            Logger.Logger.Info(typeof(ClientRepository), nameof(UpdateClient), "Call method");
 
-        #region DeleteClient
+        }
+
         public void DeleteClient(Client client)
         {
             var clientToDelete = _clients.FirstOrDefault(c => c.Id == client.Id);
@@ -75,7 +66,12 @@ namespace SushiConsole.Repositories
             {
                 throw new ClientNotFoundException("Client is not found");
             }
+            Logger.Logger.Info(typeof(ClientRepository), nameof(DeleteClient), "Call method");
         }
-        #endregion
+
+        public void ClearList()
+        {
+            _clients.Clear();
+        }
     }
 }

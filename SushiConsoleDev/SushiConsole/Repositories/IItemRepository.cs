@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SushiConsoleDev.Models;
 
 namespace SushiConsoleDev.Repositories
 {
     public interface IItemRepository
     {
-       
+        Task<List<Item>> GetItemColloection();
     }
 }

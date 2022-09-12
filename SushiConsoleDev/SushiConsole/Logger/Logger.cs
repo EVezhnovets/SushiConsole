@@ -2,40 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace SushiConsoleDev.Logger
 {
-    public class Logger
+    public static class Logger
     {
-        public static string info = "INFO";
-        public static string debug = "DEBUG";
-        public static string error = "ERROR";
         public static int fileSize = 30720;
         public static string _dateTime = String.Format("{0:yyyyMMdd}_", DateTime.UtcNow);
         public static string targetName = default;
         public static string path = default;
-        public static string pathDirectory = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\";
+        public static string pathDirectory = GetPath();
 
         public static int Counter { get; private set; } = 1;
 
         public static int ThreadInfo { get; private set; } = Thread.CurrentThread.ManagedThreadId;
 
-        public static void Info(string layer, Type type, string method, string message, string threadInfo)
+        public static void Info(Type type, string method, string message)
         {
-            LoggerHelper(layer, type, method, message, threadInfo);
-
+            LoggerHelper(LoggerLayers.Info.ToString(), type, method, message, ThreadInfo.ToString());
         }
 
-        public static void Debug(string layer, Type type, string method, string message, string threadInfo)
+        public static void Debug(Type type, string method, string message)
         {
-            LoggerHelper(layer, type, method, message, threadInfo);
+            LoggerHelper(LoggerLayers.Debug.ToString(), type, method, message, ThreadInfo.ToString());
         }
      
-        public static void Error(string layer, Type type, string method, string message, string threadInfo)
+        public static void Error(Type type, string method, string message)
         {
-            LoggerHelper(layer, type, method, message, threadInfo);
+            LoggerHelper(LoggerLayers.Error.ToString(), type, method, message, ThreadInfo.ToString());
         }
 
         public static void CheckFileSize()
@@ -57,13 +51,13 @@ namespace SushiConsoleDev.Logger
 
             if (filePathParsedNumbers.Count == 0)
             {
-                path = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\log{_dateTime}[{Counter}].txt";
+                path = GetPath() + $"\\log{_dateTime}[{Counter}].txt";
             }
             else
             {
                 targetName = $"log{_dateTime}[{filePathParsedNumbers[filePathParsedNumbers.Count - 1]}].txt";
 
-                var newPathToTagretFile = @$"{pathDirectory}" + $"{targetName}";
+                var newPathToTagretFile = @$"{pathDirectory}" + $"\\{targetName}";
                 FileInfo file = new System.IO.FileInfo(newPathToTagretFile);
                 long size = file.Length;
                 
@@ -71,7 +65,7 @@ namespace SushiConsoleDev.Logger
                 {
                     Counter = filePathParsedNumbers[filePathParsedNumbers.Count - 1];
                     ++Counter;
-                    path = @$"E:\IT\Repositories\SushiConsoleDev\SushiConsoleDev\SushiConsole\Logger\LoggerRepository\log{_dateTime}[{Counter}].txt";
+                    path = GetPath() + $"\\log{_dateTime}[{Counter}].txt";
                 }
                 else
                 {
@@ -96,6 +90,12 @@ namespace SushiConsoleDev.Logger
 
                 await streamWriter.WriteLineAsync(sb.ToString());
             }
+        }
+
+        public static string GetPath()
+        {
+            var path = Environment.CurrentDirectory + "\\LoggerRepository";
+            return path;
         }
     }
 }
