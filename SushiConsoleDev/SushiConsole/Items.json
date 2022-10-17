@@ -1,0 +1,62 @@
+[
+  {
+    "Id": 1,
+    "Name": "California",
+    "Compound": "Nori,cream cheese, rice for sushi, avocado pulp, wasabi, pink pickled ginger, fresh cucumber, roasted sesamem, tobiko, fish",
+    "Price": 2.0
+  },
+  {
+    "Id": 2,
+    "Name": "Philadelphia",
+    "Compound": "Nori, rice for sushi, wasabi, pink pickled ginger, cream cheese, salmon avocado pulp",
+    "Price": 1.3
+  },
+  {
+    "Id": 3,
+    "Name": "Dragon",
+    "Compound": "Nori, rice for sushi, wasabi, pink pickled ginger, cream cheese, acne, crab, eel sauce, fresh cucumber",
+    "Price": 1.0
+  },
+  {
+    "Id": 4,
+    "Name": "Canada",
+    "Compound": "Nori",
+    "Price": 1.4
+  },
+  {
+    "Id": 5,
+    "Name": "Alaska",
+    "Compound": "Nori, rice for sushi, wasabi, Pink pickled ginger, Cream cheese, crab meat, salmon, roasted sesame, fresh cucumber",
+    "Price": 1.6
+  },
+  {
+    "Id": 6,
+    "Name": "Volcano",
+    "Compound": "Nori, rice for sushi, wasabi, pink pickled ginger, (the top of the roll will be covered with a hat, creating the feeling that it is exploding)",
+    "Price": 1.0
+  },
+  {
+    "Id": 7,
+    "Name": "Caterpillar",
+    "Compound": "Nori, rice for sushi, wasabi, Ppink pickled ginger, cream cheese, acne, crab, eel, sauce, fresh cucumber",
+    "Price": 1.0
+  },
+  {
+    "Id": 8,
+    "Name": "Dinamite",
+    "Compound": "Nori, rice for sushi, wasabi, pink pickled ginger, shrimp tempura, yellowtail, bean sprouts, carrot, avocado pulp, fresh cucumber, chile spicy mayonnaise",
+    "Price": 2.0
+  },
+  {
+    "Id": 9,
+    "Name": "Rainbow",
+    "Compound": "Nori, rice for sushi, wasabi, pink pickled ginger, cream cheese, avocado pulp, fresh cucumber, tuna",
+    "Price": 1.5
+  },
+  {
+    "Id": 10,
+    "Name": "Spicy tuna roll",
+    "Compound": "Nori, rice for sushi, wasabi, pink pickled ginger, cream cheese, tuna, mayonnaise, chili sauce",
+    "Price": 2.2
+  }
+]
